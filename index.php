@@ -30,6 +30,11 @@ try {
         requirements: ['id' => '[0-9]+'],
         methods: ['POST'],
     ));
+    $routes->add('create', new Route(
+        path: '/vehicles/save',
+        defaults: ['controller' => VehicleController::class, 'method' => 'save'],
+        methods: ['POST'],
+    ));
     $routes->add('delete', new Route(
         path: '/vehicles/delete/{id}',
         defaults: ['controller' => VehicleController::class, 'method' => 'delete'],

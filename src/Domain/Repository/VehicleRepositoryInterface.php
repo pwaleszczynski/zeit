@@ -3,14 +3,15 @@
 namespace Domain\Repository;
 
 use Domain\Entity\Vehicle;
+use Domain\ValueObject\VehicleId;
 
 interface VehicleRepositoryInterface
 {
-    public function getList();
+    public function getById(VehicleId $id): Vehicle;
 
-    public function getById($id);
+    public function exists(VehicleId $id): bool;
 
-    public function deleteById($id);
+    public function deleteById(VehicleId $id): void;
 
-    public function persist(Vehicle $vehicle);
+    public function persist(Vehicle $vehicle): Vehicle;
 }

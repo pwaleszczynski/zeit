@@ -2,90 +2,98 @@
 
 namespace Domain\Entity;
 
-class Vehicle
-{
-    private $id;
-    private $registrationNumber;
-    private $brand;
-    private $model;
-    private $type;
-    private $createdAt;
-    private $updatedAt;
+use DateTimeImmutable;
+use Domain\ValueObject\VehicleBrand;
+use Domain\ValueObject\VehicleId;
+use Domain\ValueObject\VehicleModel;
+use Domain\ValueObject\VehicleRegistrationNumber;
+use Domain\ValueObject\VehicleType;
+use Psr\Clock\ClockInterface;
 
-    public function getId()
+final class Vehicle
+{
+    private ?VehicleId $id = null;
+
+    public function __construct(
+        private VehicleRegistrationNumber $registrationNumber,
+        private VehicleBrand $brand,
+        private VehicleModel $model,
+        private VehicleType $type,
+        private readonly DateTimeImmutable $createdAt,
+        private DateTimeImmutable $updatedAt,
+    ) {
+    }
+
+    public static function create(
+        VehicleRegistrationNumber $registrationNumber,
+        VehicleBrand $brand,
+        VehicleModel $model,
+        VehicleType $type,
+        ClockInterface $clock,
+    ): self {
+        return new self(
+            registrationNumber: $registrationNumber,
+            brand: $brand,
+            model: $model,
+            type: $type,
+            createdAt: $clock->now(),
+            updatedAt: $clock->now(),
+        );
+    }
+
+    public function update(
+        VehicleRegistrationNumber $registrationNumber,
+        VehicleBrand $brand,
+        VehicleModel $model,
+        VehicleType $type,
+        ClockInterface $clock,
+    ): void {
+        $this->registrationNumber = $registrationNumber;
+        $this->brand = $brand;
+        $this->model = $model;
+        $this->type = $type;
+        $this->updatedAt = $clock->now();
+    }
+
+    public function setId(VehicleId $id): void
+    {
+        if (\is_null($this->id)) {
+            $this->id = $id;
+        }
+    }
+
+    public function getId(): ?VehicleId
     {
         return $this->id;
     }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getRegistrationNumber()
+    public function getRegistrationNumber(): VehicleRegistrationNumber
     {
         return $this->registrationNumber;
     }
 
-    public function setRegistrationNumber($registrationNumber)
-    {
-        $this->registrationNumber = $registrationNumber;
-        return $this;
-    }
-
-    public function getBrand()
+    public function getBrand(): VehicleBrand
     {
         return $this->brand;
     }
 
-    public function setBrand($brand)
-    {
-        $this->brand = $brand;
-        return $this;
-    }
-
-    public function getModel()
+    public function getModel(): VehicleModel
     {
         return $this->model;
     }
 
-    public function setModel($model)
-    {
-        $this->model = $model;
-        return $this;
-    }
-
-    public function getType()
+    public function getType(): VehicleType
     {
         return $this->type;
     }
 
-    public function setType($type)
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    public function getCreatedAt()
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function getUpdatedAt()
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
-    }
-
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-        return $this;
     }
 }
